@@ -88,6 +88,7 @@ func UClient(conn net.Conn, config *Config, clientHelloID ClientHelloID) *UConn 
 	uconn.sessionController = newSessionController(&uconn)
 	uconn.utls.sessionController = uconn.sessionController
 	uconn.skipResumptionOnNilExtension = config.PreferSkipResumptionOnNilExtension || clientHelloID.Client != helloCustom
+	uconn.Metric = &Metric{}
 	return &uconn
 }
 
