@@ -134,38 +134,67 @@ func (hs *clientHandshakeStateTLS13) handshake() error {
 	}
 
 	c.buffering = true
+	startTime := time.Now().Nanosecond()
 	if err := hs.processServerHello(); err != nil {
 		return err
 	}
+	hs.uconn.Metric.ProcessServerHelloTime = int64(time.Now().Nanosecond() - startTime)
+
+	startTime = time.Now().Nanosecond()
 	if err := hs.sendDummyChangeCipherSpec(); err != nil {
 		return err
 	}
+	hs.uconn.Metric.SendDummyChangeCipherSpecTime = int64(time.Now().Nanosecond() - startTime)
+
+	startTime = time.Now().Nanosecond()
 	if err := hs.establishHandshakeKeys(); err != nil {
 		return err
 	}
+	hs.uconn.Metric.EstablishHandshakeKeysTime = int64(time.Now().Nanosecond() - startTime)
+
+	startTime = time.Now().Nanosecond()
 	if err := hs.readServerParameters(); err != nil {
 		return err
 	}
+	hs.uconn.Metric.ReadServerParametersTime = int64(time.Now().Nanosecond() - startTime)
+
+	startTime = time.Now().Nanosecond()
 	if err := hs.readServerCertificate(); err != nil {
 		return err
 	}
+	hs.uconn.Metric.ReadServerCertificateTime = int64(time.Now().Nanosecond() - startTime)
+
+	startTime = time.Now().Nanosecond()
 	if err := hs.readServerFinished(); err != nil {
 		return err
 	}
+	hs.uconn.Metric.ReadServerFinishedTime = int64(time.Now().Nanosecond() - startTime)
+
+	startTime = time.Now().Nanosecond()
 	// [UTLS SECTION START]
 	if err := hs.serverFinishedReceived(); err != nil {
 		return err
 	}
+	hs.uconn.Metric.ServerFinishedReceivedTime = int64(time.Now().Nanosecond() - startTime)
+
+	startTime = time.Now().Nanosecond()
 	// [UTLS SECTION END]
 	if err := hs.sendClientCertificate(); err != nil {
 		return err
 	}
+	hs.uconn.Metric.SendClientCertificateTime = int64(time.Now().Nanosecond() - startTime)
+
+	startTime = time.Now().Nanosecond()
 	if err := hs.sendClientFinished(); err != nil {
 		return err
 	}
+	hs.uconn.Metric.SendClientFinishedTime = int64(time.Now().Nanosecond() - startTime)
+
+	startTime = time.Now().Nanosecond()
 	if _, err := c.flush(); err != nil {
 		return err
 	}
+	hs.uconn.Metric.FlushTime = int64(time.Now().Nanosecond() - startTime)
 
 	if hs.echContext != nil && hs.echContext.echRejected {
 		c.sendAlert(alertECHRequired)

@@ -26,6 +26,19 @@ const NotBuilt ClientHelloBuildStatus = 0
 const BuildByUtls ClientHelloBuildStatus = 1
 const BuildByGoTLS ClientHelloBuildStatus = 2
 
+type Metric struct {
+	ProcessServerHelloTime        int64
+	SendDummyChangeCipherSpecTime int64
+	EstablishHandshakeKeysTime    int64
+	ReadServerParametersTime      int64
+	ReadServerCertificateTime     int64
+	ReadServerFinishedTime        int64
+	ServerFinishedReceivedTime    int64
+	SendClientCertificateTime     int64
+	SendClientFinishedTime        int64
+	FlushTime                     int64
+}
+
 type UConn struct {
 	*Conn
 
@@ -57,6 +70,8 @@ type UConn struct {
 
 	// echCtx is the echContex returned by makeClientHello()
 	echCtx *echClientContext
+
+	Metric *Metric
 }
 
 // UClient returns a new uTLS client, with behavior depending on clientHelloID.
