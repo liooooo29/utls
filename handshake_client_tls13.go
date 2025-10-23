@@ -134,67 +134,67 @@ func (hs *clientHandshakeStateTLS13) handshake() error {
 	}
 
 	c.buffering = true
-	startTime := time.Now().Nanosecond()
+	startTime := time.Now().UnixNano()
 	if err := hs.processServerHello(); err != nil {
 		return err
 	}
-	hs.uconn.Metric.ProcessServerHelloTime = int64(time.Now().Nanosecond() - startTime)
+	hs.uconn.Metric.ProcessServerHelloTime = time.Now().UnixNano() - startTime
 
-	startTime = time.Now().Nanosecond()
+	startTime = time.Now().UnixNano()
 	if err := hs.sendDummyChangeCipherSpec(); err != nil {
 		return err
 	}
-	hs.uconn.Metric.SendDummyChangeCipherSpecTime = int64(time.Now().Nanosecond() - startTime)
+	hs.uconn.Metric.SendDummyChangeCipherSpecTime = time.Now().UnixNano() - startTime
 
-	startTime = time.Now().Nanosecond()
+	startTime = time.Now().UnixNano()
 	if err := hs.establishHandshakeKeys(); err != nil {
 		return err
 	}
-	hs.uconn.Metric.EstablishHandshakeKeysTime = int64(time.Now().Nanosecond() - startTime)
+	hs.uconn.Metric.EstablishHandshakeKeysTime = time.Now().UnixNano() - startTime
 
-	startTime = time.Now().Nanosecond()
+	startTime = time.Now().UnixNano()
 	if err := hs.readServerParameters(); err != nil {
 		return err
 	}
-	hs.uconn.Metric.ReadServerParametersTime = int64(time.Now().Nanosecond() - startTime)
+	hs.uconn.Metric.ReadServerParametersTime = time.Now().UnixNano() - startTime
 
-	startTime = time.Now().Nanosecond()
+	startTime = time.Now().UnixNano()
 	if err := hs.readServerCertificate(); err != nil {
 		return err
 	}
-	hs.uconn.Metric.ReadServerCertificateTime = int64(time.Now().Nanosecond() - startTime)
+	hs.uconn.Metric.ReadServerCertificateTime = time.Now().UnixNano() - startTime
 
-	startTime = time.Now().Nanosecond()
+	startTime = time.Now().UnixNano()
 	if err := hs.readServerFinished(); err != nil {
 		return err
 	}
-	hs.uconn.Metric.ReadServerFinishedTime = int64(time.Now().Nanosecond() - startTime)
+	hs.uconn.Metric.ReadServerFinishedTime = time.Now().UnixNano() - startTime
 
-	startTime = time.Now().Nanosecond()
+	startTime = time.Now().UnixNano()
 	// [UTLS SECTION START]
 	if err := hs.serverFinishedReceived(); err != nil {
 		return err
 	}
-	hs.uconn.Metric.ServerFinishedReceivedTime = int64(time.Now().Nanosecond() - startTime)
+	hs.uconn.Metric.ServerFinishedReceivedTime = time.Now().UnixNano() - startTime
 
-	startTime = time.Now().Nanosecond()
+	startTime = time.Now().UnixNano()
 	// [UTLS SECTION END]
 	if err := hs.sendClientCertificate(); err != nil {
 		return err
 	}
-	hs.uconn.Metric.SendClientCertificateTime = int64(time.Now().Nanosecond() - startTime)
+	hs.uconn.Metric.SendClientCertificateTime = time.Now().UnixNano() - startTime
 
-	startTime = time.Now().Nanosecond()
+	startTime = time.Now().UnixNano()
 	if err := hs.sendClientFinished(); err != nil {
 		return err
 	}
-	hs.uconn.Metric.SendClientFinishedTime = int64(time.Now().Nanosecond() - startTime)
+	hs.uconn.Metric.SendClientFinishedTime = time.Now().UnixNano() - startTime
 
-	startTime = time.Now().Nanosecond()
+	startTime = time.Now().UnixNano()
 	if _, err := c.flush(); err != nil {
 		return err
 	}
-	hs.uconn.Metric.FlushTime = int64(time.Now().Nanosecond() - startTime)
+	hs.uconn.Metric.FlushTime = time.Now().UnixNano() - startTime
 
 	if hs.echContext != nil && hs.echContext.echRejected {
 		c.sendAlert(alertECHRequired)
